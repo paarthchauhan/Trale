@@ -38,3 +38,11 @@ app.use(errorMiddleware);
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);
 });
+
+app.use(cors(
+  {
+    origin: ["https://trale-x8vt.vercel.app/"],
+    methods: ["POST", "GET"],
+    credentials: true
+  }
+))
