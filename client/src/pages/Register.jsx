@@ -112,8 +112,16 @@ const Register = () => {
                 styles='w-full'
                 register={register("password", {
                   required: "Password is required!",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters long",
+                  },
+                  validate: {
+                    noWhiteSpace: value =>
+                      !/\s/.test(value) || "Password must not contain white spaces",
+                  },
                 })}
-                error={errors.password ? errors.password?.message : ""}
+                error={errors.password ? errors.password.message : ""}
               />
 
               <TextInput
@@ -122,11 +130,11 @@ const Register = () => {
                 type='password'
                 styles='w-full'
                 register={register("cPassword", {
-                  validate: (value) => {
+                  validate: value => {
                     const { password } = getValues();
 
-                    if (password != value) {
-                      return "Passwords do no match";
+                    if (password !== value) {
+                      return "Passwords do not match";
                     }
                   },
                 })}
@@ -137,6 +145,7 @@ const Register = () => {
                 }
               />
             </div>
+
 
             {errMsg?.message && (
               <span
