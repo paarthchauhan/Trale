@@ -91,12 +91,12 @@ trale/
 │       ├── components/ # Reusable components
 │       ├── pages/      # Pages and views
 │       ├── redux/      # Redux setup
-│       ├── styles/     # CSS and styling
+│       ├── utils/
 │       └── App.js
 ├── server/             # Backend application
 │   ├── controllers/    # Route controllers
 │   ├── models/         # Mongoose models
 │   ├── routes/         # Express routes
 │   ├── utils/          # Utility functions
-│   └── server.js       # Entry point
+│   └── index.js       # Entry point
 └── README.md
