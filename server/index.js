@@ -16,7 +16,11 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, "views/build")));
+app.use(express.static(path.join(__dirname, "views")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "index.html"));
+});
+
 
 const PORT = process.env.PORT || 8800;
 
@@ -30,7 +34,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
-app.use(router);
+app.use("/api",router);
 
 //error middleware
 app.use(errorMiddleware);
@@ -41,7 +45,7 @@ app.listen(PORT, () => {
 
 app.use(cors(
   {
-    origin: ["https://trale-x8vt.vercel.app/"],
+    origin: ["http://localhost:3000"],
     methods: ["POST", "GET"],
     credentials: true
   }

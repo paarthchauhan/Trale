@@ -5,8 +5,14 @@ import postRoute from "./postRoutes.js";
 
 const router = express.Router();
 
-router.use(`/auth`, authRoute);  // auth/register
-router.use(`/users`, userRoute);
-router.use(`/posts`, postRoute);
+// Group all your route modules under base paths
+router.use("/auth", authRoute);   // Handles /api/auth/*
+router.use("/users", userRoute);  // Handles /api/users/*
+router.use("/posts", postRoute);  // Handles /api/posts/*
+
+// Optional base route for testing
+router.get("/", (req, res) => {
+  res.send("Welcome to the API root!");
+});
 
 export default router;

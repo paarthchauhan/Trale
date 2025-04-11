@@ -28,6 +28,7 @@ import { NoProfile } from "../assets";
 import { UserLogin } from "../redux/userSlice";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+
 const Home = () => {
   const {
     register,
@@ -66,7 +67,7 @@ const Home = () => {
       if (file) {
         uri = await handleFileUpload(file);
       }
-
+      
       const newData = uri ? { ...data, image: uri } : data;
 
       const res = await apiRequest({
@@ -173,54 +174,62 @@ const Home = () => {
     fetchFriendRequests();
     fetchSuggestedFriends();
   }, []);
-
-  const handleCreateWithAI = async (prompt) => {
-      const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
-      console.log(process.env.GEMINI_API_KEY)
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-      try {
-        const safePrompt = `Create a friendly social media caption about: ${prompt}. Keep the content positive and engaging. only give one caption with no other options and formatting like bold and italic`;
-    
-        const result = await model.generateContent({
-        contents: [{ role: "user", parts: [{ text: safePrompt }]}],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.8,
-          maxOutputTokens: 200,
-        },
-        safetySettings: [
-          {
-            category: "HARM_CATEGORY_HARASSMENT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE",
-          },
-          {
-            category: "HARM_CATEGORY_HATE_SPEECH",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE",
-          },
-          {
-            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE",
-          },
-          {
-            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE",
-          },
-        ],
-      });
-        const generatedText = result.response.text();
-        setAiPostContent({ text: generatedText});
-        setDescription(generatedText);
-        setShowAIPostModal(false); // Close the modal after generating
-        reset({ description: generatedText });
-      } catch (error) {
-        console.error('Error generating post with AI:', error);
-        throw error;
-      }
-  };
   
 
+  const fileToImagePart = async (file) => {
+    const mimeType = file.type;
+  
+    const base64Data = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result.split(",")[1]; // remove data:mime;base64,
+        resolve(result);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  
+    return {
+      inlineData: {
+        mimeType,
+        data: base64Data,
+      },
+    };
+  };
+  
+  const handleCreateWithAI = async (file) => {
+    try {
+      console.log("🖼️ File received for AI:", file); // Directly a File object
+  
+      const ai = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
+      const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+  
+      const imagePart = await fileToImagePart(file);
+      console.log("📸 imagePart:", imagePart);
+      const prompt = `Generate a single, short, friendly, and engaging social media caption for the uploaded image.
+        It should sound natural and fun, be under 280 characters, and include relevant hashtags.
+        Do NOT provide multiple options or label anything — just return one caption string only.
+        `;
+
+      const promptInput = [
+        prompt,
+        imagePart,
+      ];
+  
+      const result = await model.generateContent(promptInput);
+  
+      const generatedText = await result.response.text();
+      console.log("🧠 Generated caption:", generatedText);
+  
+      setAiPostContent({ text: generatedText });
+      setDescription(generatedText);
+      reset({ description: generatedText });
+      setShowAIPostModal(false);
+    } catch (err) {
+      console.error("🔥 AI caption error:", err);
+    }
+  };
+  
   return (
     <>
       <div className='w-full px-0 lg:px-10 pb-5 md:pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden'>
@@ -320,9 +329,11 @@ const Home = () => {
               <AIPromptModal
                 onClose={() => setShowAIPostModal(false)}
                 onGenerate={handleCreateWithAI}
-                setDescription={setDescription} // Pass the setDescription function as a prop
+                file={file}
+                imagePreview={imagePreview}
               />
             )}
+
 
             <div className='block md:hidden'>
               <ProfileCard user={user} />

@@ -59,7 +59,7 @@ const Login = () => {
         <div className='w-full lg:w-1/2 h-full p-10 2xl:px-20 flex flex-col justify-center'>
           <div className='w-full flex gap-2 items-center mb-6'>
           <span className='text-2xl' style={{ color: '#BF8F8F' , fontWeight: 'bold' , fontFamily: 'cursive'}}>
-            Trale
+            Muse
           </span>
           </div>
           <p className='text-ascent-1 text-base font-semibold'>
