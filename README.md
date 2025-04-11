@@ -1,4 +1,4 @@
-# Trale - A Social Media Application
+# Muse - A Social Media Application
 
 ## Overview
 
