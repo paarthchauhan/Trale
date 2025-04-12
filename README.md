@@ -34,7 +34,7 @@ Trale is a social media application built with the MERN stack (MongoDB, Express,
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/tijilparakh04/trale.git
+    git clone https://github.com/Yashita-2907/Trale
     cd trale
     ```
 
