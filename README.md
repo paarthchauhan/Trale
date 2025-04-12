@@ -1,4 +1,4 @@
-# Muse - A Social Media Application
+# Trale - A Social Media Application
 ## Overview
 
 Trale is a social media application built with the MERN stack (MongoDB, Express, React, Node.js). The application aims to provide a seamless and interactive platform for users to connect, share, and engage with each other.
