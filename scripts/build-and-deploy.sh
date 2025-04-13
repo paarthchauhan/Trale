@@ -1,5 +1,5 @@
+#shell scripting
 #!/bin/bash
-
 #!/bin/bash
 
 echo "📦 [Simulated] Deploying frontend..."
