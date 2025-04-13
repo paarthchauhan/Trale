@@ -1,6 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
 //schema
+// Login issue under investigation - tracking Fix #12
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
