@@ -11,3 +11,5 @@ cd ../server
 npm install
 
 echo " Setup complete!"
+# This is a minor update to help close issue #4
+
